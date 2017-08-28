@@ -6,6 +6,22 @@ Web application written in `Python3` using the `Flask` micro-framework to
 1. Get Star Wars movies grouped by their director.
 2. Get a list of characters for a given film id
 
+
+```
+.
+├── config.py           # config file, with such a simple app there's really nothing in there 
+├── docker-compose.yml  # used to bring up the system if using the docker-compose method 
+├── Dockerfile          # used by above
+├── README.md           
+├── requirements.txt    
+├── run.py              # the start of the application
+├── tests          
+│   └── views.py       
+└── zume
+    ├── app.py          # route/view/error handling 
+    └── __init__.py     # application initialization
+```
+
 ## Running the application
 
 I have two ways for you to run this application.  With `Docker` + `Docker Compose` or using your system's python
@@ -25,7 +41,14 @@ app_1  | [2017-08-28 07:17:30 +0000] [8] [INFO] Booting worker with pid: 8
 #### If using regular local `python`
 1. Install packages `$ pip install -r requirements.txt`
 2. Start the server `$ gunicorn  -b 0.0.0.0:5000 run:app`
-3. Server listening on port 5000
+3. Server listening on port `5000`
+
+
+#### Running tests
+
+A handfull of tests and all tests are mocked out so no external calls are being made to SWAPI
+
+1. execute `nosetests tests/*`
 
 ## API
 
