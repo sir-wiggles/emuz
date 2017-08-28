@@ -1,10 +1,10 @@
+import logging
 from collections import defaultdict
 
+import grequests
 import requests
 from flask import Response, jsonify
 from werkzeug.exceptions import HTTPException
-
-import grequests
 
 SWAPI = "https://swapi.co/api"
 
@@ -48,6 +48,13 @@ def make_request(url):
 def configure(app):
     app.response_class = JsonResponse
 
+    @app.before_first_request
+    def setup_logging():
+        if not app.debug:
+            # In production mode, add log handler to sys.stderr.
+            app.logger.addHandler(logging.StreamHandler())
+            app.logger.setLevel(logging.INFO)
+
     @app.errorhandler(Exception)
     def errorhandler(e):
         app.logger.exception(e)
@@ -81,6 +88,11 @@ def configure(app):
         characters = grequests.imap([grequests.get(url) for url in urls])
         for character in characters:
             if character.status_code != 200:
+                app.logger.warning(
+                    "Getting character returned status code {}".format(
+                        character.status_code
+                    )
+                )
                 continue
             name = character.json().get("name")
             if name is not None:
